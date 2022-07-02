@@ -14,6 +14,9 @@ const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
   const [walletAddress, setWalletAddress] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [gifList, setGifList] = useState([]);
+
   const checkIfWalletIsConnected = async () => {
     try {
       const { solana } = window;
@@ -38,6 +41,13 @@ const App = () => {
     return () => window.removeEventListener("load", onLoad);
   }, []);
 
+  useEffect(() => {
+    if (walletAddress) {
+      console.log("Fetching Gif list...");
+      setGifList(TEST_GIFS);
+    }
+  });
+  console.log(gifList);
   const connectWallet = async () => {
     const { solana } = window;
 
@@ -47,7 +57,17 @@ const App = () => {
       setWalletAddress(response.publicKey.toString());
     }
   };
-
+  const onInputChange = (e) => {
+    const { value } = e.target;
+    setInputValue(value);
+  };
+  const sendGif = async () => {
+    if (inputValue.length > 0) {
+      console.log("Gif link", inputValue);
+    } else {
+      console.log("Empty input.Try again");
+    }
+  };
   const renderNotconnectedContainer = () => {
     return (
       <button
@@ -60,15 +80,20 @@ const App = () => {
   };
 
   const renderConnectedContainer = () => {
-    // const [inputValue, setInputValue] = useState("");
     return (
       <div className="conneccted-container">
         <form
           onSubmit={(event) => {
             event.preventDefault();
+            sendGif();
           }}
         >
-          <input type="text" placeholder="Enter gif link!" />
+          <input
+            type="text"
+            placeholder="Enter gif link!"
+            value={inputValue}
+            onChange={onInputChange}
+          />
           <button type="submit" className="cta-button submit-gif-button">
             Submit
           </button>
