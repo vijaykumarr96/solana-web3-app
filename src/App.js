@@ -2,6 +2,12 @@ import twitterLogo from "./assets/twitter-logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
 
+const TEST_GIFS = [
+  "https://media.giphy.com/media/rj12FejFUysTK/giphy.gif",
+  "https://media.giphy.com/media/dUlhTFxtCbspPZVTKS/giphy.gif",
+  "https://media.giphy.com/media/idST45hKtuhJt35Ejx/giphy.gif",
+  "https://media.giphy.com/media/8xomIW1DRelmo/giphy.gif",
+];
 // Constants
 const TWITTER_HANDLE = "Imthevk";
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
@@ -17,7 +23,6 @@ const App = () => {
         // * The solana object gives us a function that will allow us to connect
         const response = await solana.connect({ onlyIfTrusted: true });
         console.log(response.publicKey.toString());
-        // setWalletAddress(response.publicKey.toString());
       } else {
         alert("Solana object not found! Get a phantom wallet now");
       }
@@ -53,15 +58,41 @@ const App = () => {
       </button>
     );
   };
+
+  const renderConnectedContainer = () => {
+    // const [inputValue, setInputValue] = useState("");
+    return (
+      <div className="conneccted-container">
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+          }}
+        >
+          <input type="text" placeholder="Enter gif link!" />
+          <button type="submit" className="cta-button submit-gif-button">
+            Submit
+          </button>
+        </form>
+        <div className="gif-grid">
+          {TEST_GIFS.map((gif) => (
+            <div className="gif-item" key={gif}>
+              <img src={gif} alt={gif} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
   return (
     <div className="App">
       <div className={walletAddress ? "authed-container" : "container"}>
         <div className="header-container">
-          <p className="header">🖼 GIF Portal</p>
+          <p className="header">🖼 Avengers Portal</p>
           <p className="sub-text">
-            View your GIF collection in the metaverse ✨
+            View your Avengers GIF collection in the metaverse ✨
           </p>
           {!walletAddress && renderNotconnectedContainer()}
+          {walletAddress && renderConnectedContainer()}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
