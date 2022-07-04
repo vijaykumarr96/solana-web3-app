@@ -20,7 +20,6 @@ const App = () => {
   const checkIfWalletIsConnected = async () => {
     try {
       const { solana } = window;
-      console.log(solana);
       if (solana?.isPhantom) {
         console.log("phantom wallet found");
         // * The solana object gives us a function that will allow us to connect
@@ -46,8 +45,8 @@ const App = () => {
       console.log("Fetching Gif list...");
       setGifList(TEST_GIFS);
     }
-  });
-  console.log(gifList);
+  }, [walletAddress]);
+  // console.log(gifList);
   const connectWallet = async () => {
     const { solana } = window;
 
@@ -64,6 +63,8 @@ const App = () => {
   const sendGif = async () => {
     if (inputValue.length > 0) {
       console.log("Gif link", inputValue);
+      setGifList([...gifList, inputValue]);
+      setInputValue("");
     } else {
       console.log("Empty input.Try again");
     }
@@ -81,7 +82,7 @@ const App = () => {
 
   const renderConnectedContainer = () => {
     return (
-      <div className="conneccted-container">
+      <div className="connected-container">
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -99,7 +100,7 @@ const App = () => {
           </button>
         </form>
         <div className="gif-grid">
-          {TEST_GIFS.map((gif) => (
+          {gifList.map((gif) => (
             <div className="gif-item" key={gif}>
               <img src={gif} alt={gif} />
             </div>
